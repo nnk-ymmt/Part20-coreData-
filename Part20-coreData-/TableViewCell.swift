@@ -20,8 +20,6 @@ final class TableViewCell: UITableViewCell {
     }
 
     func configure(fruit: Fruit) {
-        print("きた")
-        print(fruit)
         nameLabel.text = fruit.name
         checkView.image = fruit.isChecked ? UIImage(named: "check") : nil
     }

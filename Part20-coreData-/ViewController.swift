@@ -34,7 +34,6 @@ final class ViewController: UIViewController {
             return
         }
         useCase.append(fruit: newFruit)
-         print("っき")
         tableView.reloadData()
     }
 
@@ -70,7 +69,6 @@ extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.reuseIdentifier, for: indexPath) as? TableViewCell else {
-            print("せる")
             return UITableViewCell()
         }
         cell.accessoryType = UITableViewCell.AccessoryType.detailButton
@@ -107,8 +105,6 @@ class FruitsUseCase {
 
     func append(fruit: Fruit) {
         fruits.append(fruit)
-        print(fruit)
-        print(repository.load())
         repository.save()
     }
 
@@ -138,7 +134,6 @@ class FruitsRepository {
     }
 
     func update(prefruit: String, fruit: String) {
-        print(FruitsRepository())
         guard let context = FruitsRepository.managedObjectContext else { return }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: FruitsRepository.key)
         fetchRequest.predicate = NSPredicate(format:"name = %@", prefruit)
@@ -148,8 +143,6 @@ class FruitsRepository {
             for obj in results {
                 obj.setValue(fruit, forKey: "name")
             }
-            print("ここ")
-            print(fetchRequest)
             save()
         } catch {
             print("エラー")
@@ -163,9 +156,7 @@ class FruitsRepository {
     }
 
     func load() -> [Fruit]? {
-        guard let context = FruitsRepository.managedObjectContext else {
-            print("きてない")
-            return nil }
+        guard let context = FruitsRepository.managedObjectContext else { return nil }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: FruitsRepository.key)
         do {
             return try context.fetch(fetchRequest) as? [Fruit]
