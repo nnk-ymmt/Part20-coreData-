@@ -39,7 +39,7 @@ final class ViewController: UIViewController {
 
     @IBAction func edit(segue: UIStoryboardSegue) {
         guard let inputVC = segue.source as? InputViewController,
-              let fruit = inputVC.output,
+              let fruit = inputVC.editName,
               let editIndexPath = editIndexPath else {
             return
         }
@@ -108,8 +108,8 @@ class FruitsUseCase {
         repository.save()
     }
 
-    func replace(index: Int, fruit: Fruit) {
-        repository.update(prefruit: fruits[index].name ?? "", fruit: fruit.name ?? "")
+    func replace(index: Int, fruit: String) {
+        repository.update(prefruit: fruits[index].name ?? "", fruit: fruit)
     }
 
     func toggleCheck(index: Int) {

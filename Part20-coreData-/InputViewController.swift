@@ -19,6 +19,7 @@ final class InputViewController: UIViewController {
 
     var mode: Mode?
     private(set) var output: Fruit?
+    private(set) var editName: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,23 +40,19 @@ final class InputViewController: UIViewController {
     @IBAction private func saveAction(_ sender: Any) {
         guard let mode = mode else { return }
 
-        let isChecked: Bool = {
-            switch mode {
-            case .input:
-                return false
-            case let .edit(fruit):
-                return fruit.isChecked
+        switch mode {
+        case .input:
+            guard let context = FruitsRepository.managedObjectContext,
+                  let newFruit = NSEntityDescription.insertNewObject(forEntityName: FruitsRepository.key, into: context) as? Fruit else {
+                print("エラー")
+                return
             }
-        }()
-
-        guard let context = FruitsRepository.managedObjectContext,
-           let newFruit = NSEntityDescription.insertNewObject(forEntityName: FruitsRepository.key, into: context) as? Fruit else {
-            print("エラー")
-            return
+            newFruit.name = textField.text ?? ""
+            newFruit.isChecked = false
+            output = newFruit
+        case .edit:
+            editName = textField.text ?? ""
         }
-        newFruit.name = textField.text ?? ""
-        newFruit.isChecked = isChecked
-        output = newFruit
 
         performSegue(
             withIdentifier: {
