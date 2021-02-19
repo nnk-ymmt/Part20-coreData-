@@ -141,8 +141,8 @@ class FruitsRepository {
         do {
             let fetchResults = try context.fetch(fetchRequest)
             guard let results = fetchResults as? [NSManagedObject] else { return }
-            for obj in results {
-                obj.setValue(fruit, forKey: "name")
+            if results.count != 0 {
+                results[0].setValue(fruit, forKey: "name")
             }
             save()
         } catch {
