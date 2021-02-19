@@ -44,7 +44,8 @@ final class ViewController: UIViewController {
             return
         }
         useCase.replace(index: editIndexPath.row, fruit: fruit)
-        tableView.reloadRows(at: [editIndexPath], with: .automatic)
+//        tableView.reloadRows(at: [editIndexPath], with: .automatic)
+        tableView.reloadData()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
