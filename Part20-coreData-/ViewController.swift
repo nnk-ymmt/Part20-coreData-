@@ -110,7 +110,7 @@ class FruitsUseCase {
     }
 
     func replace(index: Int, fruit: String) {
-        repository.update(prefruit: fruits[index].name ?? "", fruit: fruit)
+        repository.update(index: index, fruit: fruit)
     }
 
     func toggleCheck(index: Int) {
@@ -134,15 +134,14 @@ class FruitsRepository {
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
-    func update(prefruit: String, fruit: String) {
+    func update(index: Int, fruit: String) {
         guard let context = FruitsRepository.managedObjectContext else { return }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: FruitsRepository.key)
-        fetchRequest.predicate = NSPredicate(format:"name = %@", prefruit)
         do {
             let fetchResults = try context.fetch(fetchRequest)
             guard let results = fetchResults as? [NSManagedObject] else { return }
-            if results.count != 0 {
-                results[0].setValue(fruit, forKey: "name")
+            if !results.isEmpty {
+                results[index].setValue(fruit, forKey: "name")
             }
             save()
         } catch {
