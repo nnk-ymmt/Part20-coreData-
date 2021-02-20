@@ -49,6 +49,8 @@ final class InputViewController: UIViewController {
             }
             newFruit.name = textField.text ?? ""
             newFruit.isChecked = false
+            newFruit.uuid = UUID()
+            newFruit.createdAt = Date()
             output = newFruit
         case .edit:
             editName = textField.text ?? ""
