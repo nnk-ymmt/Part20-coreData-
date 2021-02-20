@@ -126,8 +126,23 @@ class FruitsUseCase {
 
 class FruitsRepository {
     static let key = "Fruit"
-    static var managedObjectContext: NSManagedObjectContext? {
+    private static var managedObjectContext: NSManagedObjectContext? {
         (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
+    }
+
+    func create(name: String, isChecked: Bool) -> Fruit? {
+        guard let context = Self.managedObjectContext,
+              let newFruit = NSEntityDescription.insertNewObject(forEntityName: Self.key, into: context) as? Fruit else {
+            print("エラー")
+            return nil
+        }
+        
+        newFruit.name = name
+        newFruit.isChecked = false
+        newFruit.uuid = UUID()
+        newFruit.createdAt = Date()
+
+        return newFruit
     }
 
     func save() {
