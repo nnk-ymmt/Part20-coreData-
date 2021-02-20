@@ -126,8 +126,23 @@ class FruitsUseCase {
 
 class FruitsRepository {
     static let key = "Fruit"
-    static var managedObjectContext: NSManagedObjectContext? {
+    private static var managedObjectContext: NSManagedObjectContext? {
         (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
+    }
+
+    func create(name: String, isChecked: Bool) -> Fruit? {
+        guard let context = Self.managedObjectContext,
+              let newFruit = NSEntityDescription.insertNewObject(forEntityName: Self.key, into: context) as? Fruit else {
+            print("エラー")
+            return nil
+        }
+        
+        newFruit.name = name
+        newFruit.isChecked = false
+        newFruit.uuid = UUID()
+        newFruit.createdAt = Date()
+
+        return newFruit
     }
 
     func save() {
@@ -135,18 +150,13 @@ class FruitsRepository {
     }
 
     func update(index: Int, fruit: String) {
-        guard let context = FruitsRepository.managedObjectContext else { return }
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: FruitsRepository.key)
-        do {
-            let fetchResults = try context.fetch(fetchRequest)
-            guard let results = fetchResults as? [NSManagedObject] else { return }
-            if !results.isEmpty {
-                results[index].setValue(fruit, forKey: "name")
-            }
-            save()
-        } catch {
-            print("エラー")
+        guard let results = load() else { return }
+
+        if !results.isEmpty {
+            results[index].setValue(fruit, forKey: "name")
         }
+
+        save()
     }
 
     func delete(fruit: Fruit) {
@@ -158,6 +168,8 @@ class FruitsRepository {
     func load() -> [Fruit]? {
         guard let context = FruitsRepository.managedObjectContext else { return nil }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: FruitsRepository.key)
+        let sortDescripter = NSSortDescriptor(key: "createdAt", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescripter]
         do {
             return try context.fetch(fetchRequest) as? [Fruit]
         } catch {

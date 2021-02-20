@@ -21,6 +21,8 @@ final class InputViewController: UIViewController {
     private(set) var output: Fruit?
     private(set) var editName: String?
 
+    private let repository = FruitsRepository()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let mode = mode else {
@@ -42,13 +44,9 @@ final class InputViewController: UIViewController {
 
         switch mode {
         case .input:
-            guard let context = FruitsRepository.managedObjectContext,
-                  let newFruit = NSEntityDescription.insertNewObject(forEntityName: FruitsRepository.key, into: context) as? Fruit else {
-                print("エラー")
-                return
+            guard let newFruit = repository.create(name: textField.text ?? "", isChecked: false) else {
+                fatalError("newFruit is nil.")
             }
-            newFruit.name = textField.text ?? ""
-            newFruit.isChecked = false
             output = newFruit
         case .edit:
             editName = textField.text ?? ""
