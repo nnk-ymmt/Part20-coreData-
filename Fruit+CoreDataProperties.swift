@@ -18,6 +18,8 @@ extension Fruit {
 
     @NSManaged public var isChecked: Bool
     @NSManaged public var name: String?
+    @NSManaged public var createdAt: Date
+    @NSManaged public var uuid: UUID
 
 }
 
