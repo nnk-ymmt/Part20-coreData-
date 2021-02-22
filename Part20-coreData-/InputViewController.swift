@@ -20,6 +20,7 @@ final class InputViewController: UIViewController {
     var mode: Mode?
     private(set) var output: Fruit?
     private(set) var editName: String?
+    private let repository = FruitsRepository()
 
     override func viewDidLoad() {
         super.viewDidLoad()
