@@ -43,11 +43,15 @@ final class InputViewController: UIViewController {
 
         switch mode {
         case .input:
-            guard let context = FruitsRepository.managedObjectContext,
-                  let newFruit = NSEntityDescription.insertNewObject(forEntityName: FruitsRepository.key, into: context) as? Fruit else {
-                print("エラー")
-                return
+//            guard let context = FruitsRepository.managedObjectContext,
+//                  let newFruit = NSEntityDescription.insertNewObject(forEntityName: FruitsRepository.key, into: context) as? Fruit else {
+//                print("エラー")
+//                return
+//            }
+            guard let newFruit = repository.create(name: textField.text ?? "", isChecked: false) else {
+                fatalError("newFruit is nil.")
             }
+
             newFruit.name = textField.text ?? ""
             newFruit.isChecked = false
             output = newFruit
